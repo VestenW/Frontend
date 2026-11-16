@@ -14,8 +14,16 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
+    min-height: 100vh;
     margin: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
     font-family: Arial, sans-serif;
     font-size: 1rem;
     line-height: 1.6;
@@ -39,8 +47,21 @@ header h1 {
 }
 
 main {
-    max-width: 960px;
+    width: min(100%, 1024px);
     margin: 0 auto;
+
+    /* Основные зоны главной страницы размещаются по двум колонкам */
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+    grid-template-areas:
+        "heading heading"
+        "intro intro"
+        "image navigation"
+        "news news"
+        "extra extra"
+        "top top";
+    gap: 1.5rem;
+    align-content: start;
 }
 
 h1,
@@ -58,8 +79,10 @@ p {
 }
 
 nav ul {
+    /* Навигация построена на Flexbox */
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.5rem 1.25rem;
     margin: 0;
     padding: 0;
@@ -95,19 +118,94 @@ img {
     height: auto;
 }
 
+
+
+
+main > h2 {
+    grid-area: heading;
+    margin: 0;
+}
+
+main > img {
+    grid-area: image;
+    width: min(100%, 420px);
+    margin: 0 auto;
+}
+
+main > p {
+    grid-area: intro;
+}
+/* Общие стили блоков */
 section,
 article,
-aside {
-    margin: 1.5rem 0;
+aside,
+main > nav {
     padding: 1.25rem;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
 }
 
+/* Вступительный блок: текст и изображение */
+
+
+/* Стили для исходной разметки:
+   h2, изображение и абзац вступления остаются отдельными элементами.
+   Эти свойства помогают им располагаться компактно. */
+main > h2 {
+    margin: 0;
+}
+
+main > img {
+    width: min(100%, 420px);
+    margin: 0 auto;
+}
+
+/* Навигация по разделам страницы */
+main > nav {
+    grid-area: navigation;
+    align-self: start;
+}
+
+main > nav p {
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* Новости и карточки */
+#news {
+    grid-area: news;
+    margin: 0;
+}
+
+#news > h2 {
+    margin-top: 0;
+}
+
+#news article {
+    margin: 1rem 0 0;
+}
+
+/* Карточка плана находится внутри секции новостей */
+#plans {
+    border-color: var(--color-border);
+}
+
 article h3 {
     margin-top: 0;
     color: var(--color-primary);
+}
+
+/* Дополнительная информация */
+#extra {
+    grid-area: extra;
+    margin: 0;
+}
+
+/* Ссылка возврата наверх */
+main > p:last-child {
+    grid-area: top;
+    margin: 0;
 }
 
 footer {
@@ -121,14 +219,158 @@ footer p {
 }
 
 @media (max-width: 600px) {
-    header,
-    main,
-    footer {
-        padding: 1rem;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 0.5rem;
+    main {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "heading"
+            "image"
+            "intro"
+            "navigation"
+            "news"
+            "extra"
+            "top";
     }
 }
+
+
+
+/* Блоки Новостей */
+#news .news-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#news .news-cards article {
+    flex: 1 1 250px;
+    margin: 0;
+}
+
+
+
+
+/* Карточки Друзей */
+#friends .friends-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#friends .friends-cards li {
+    flex: 1 1 150px;
+    max-width: 220px;
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+}
+
+#friends .friends-cards li p {
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+#friends .friends-cards img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+
+
+
+
+/* Блоки СПС */
+.sps-main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "title title"
+        "intro intro"
+        "overview overview"
+        "layers layers"
+        "components interfaces"
+        "stack stack";
+}
+
+.sps-main > h2 {
+    grid-area: title;
+    margin: 0;
+}
+
+.sps-main > .page-intro {
+    grid-area: intro;
+    margin: 0;
+}
+
+.sps-overview {
+    grid-area: overview;
+}
+
+.sps-layers {
+    grid-area: layers;
+}
+
+.sps-components {
+    grid-area: components;
+}
+
+.sps-interfaces {
+    grid-area: interfaces;
+}
+
+.sps-stack {
+    grid-area: stack;
+}
+
+
+
+
+/* Flexbox размещает карточки архитектурных слоёв */
+.sps-card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.sps-card {
+    flex: 1 1 200px;
+    margin: 0;
+    padding: 1rem;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+}
+
+.sps-card h4 {
+    margin-top: 0;
+    color: var(--color-primary);
+}
+
+.sps-main section {
+    margin: 0;
+}
+
+/* На узком экране блоки располагаются в одну колонку */
+@media (max-width: 600px) {
+    .sps-main {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "title"
+            "intro"
+            "overview"
+            "layers"
+            "components"
+            "interfaces"
+            "stack"
+            "development";
+    }
+}
+
+
+
+
